@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>anton-gpt 🤖</title>
+<style>
+  @keyframes float {
+    0%, 100% { transform: translateY(0) rotate(-1deg); }
+    50% { transform: translateY(-20px) rotate(1deg); }
+  }
+  @keyframes wiggle {
+    0%, 100% { transform: rotate(-3deg); }
+    50% { transform: rotate(3deg); }
+  }
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+  }
+  @keyframes rainbow {
+    0% { filter: hue-rotate(0deg); }
+    100% { filter: hue-rotate(360deg); }
+  }
+  @keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+  @keyframes imagePan {
+    0% { transform: scale(1.1) translate(0, 0); }
+    25% { transform: scale(1.15) translate(3%, -2%); }
+    50% { transform: scale(1.1) translate(-2%, 3%); }
+    75% { transform: scale(1.15) translate(-3%, -3%); }
+    100% { transform: scale(1.1) translate(0, 0); }
+  }
+  @keyframes imageRotate {
+    0%, 100% { transform: scale(1.1) rotate(0deg); }
+    50% { transform: scale(1.12) rotate(1deg); }
+  }
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateY(20px) rotate(-2deg); }
+    to { opacity: 1; transform: translateY(0) rotate(0); }
+  }
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  * { box-sizing: border-box; }
+  html, body { height: 100%; margin: 0; overflow-x: hidden; }
+
+  /* Animated background with the image */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: -20%;
+    background:
+      linear-gradient(135deg, #ff6b6b 0%, #4ecdc4 25%, #ffe66d 50%, #a8e6cf 75%, #ff8b94 100%),
+      url("thumb-1920-342138.png") center/cover no-repeat;
+    background-size: 400% 400%, cover;
+    background-blend-mode: overlay, normal;
+    opacity: 0.15;
+    animation:
+      gradientShift 25s ease infinite,
+      imagePan 30s ease-in-out infinite,
+      imageRotate 40s ease-in-out infinite;
+    z-index: -2;
+    pointer-events: none;
+  }
+
+  /* Floating decorative elements */
+  body::after {
+    content: "🤖 🧠 💀 🤡 👽 🎮 🍕 🌮 🎲 🎪  🚀 💩 🎯 🍻 🎨";
+    position: fixed;
+    top: 5%;
+    left: -10%;
+    font-size: 2rem;
+    opacity: 0.08;
+    animation: float 15s ease-in-out infinite, floatHorizontal 25s linear infinite;
+    z-index: -1;
+    pointer-events: none;
+    white-space: nowrap;
+  }
+
+  @keyframes floatHorizontal {
+    0% { left: -10%; }
+    100% { left: 110%; }
+  }
+
+  body {
+    font-family: "Comic Sans MS", "Chalkboard SE", "Marker Felt", "Comic Neue", cursive, sans-serif;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    padding: 20px;
+    background: transparent;
+    color: #1a1a2e;
+  }
+
+  /* Main container - looks like a notebook page */
+  .page {
+    flex: 1;
+    max-width: 760px;
+    width: 100%;
+    margin: 0 auto;
+    background: linear-gradient(180deg,
+      #fffdf5 0%,
+      #fff8e7 50%,
+      #ffeef0 100%
+    );
+    border: 4px solid #2d2d2d;
+    border-radius: 20px 20px 40px 20px;
+    box-shadow:
+      0 20px 40px rgba(0,0,0,0.15),
+      0 0 0 1px rgba(255,255,255,0.5) inset,
+      8px 8px 0 #ff6b6b,
+      -4px -4px 0 #4ecdc4;
+    position: relative;
+    overflow: hidden;
+    animation: slideIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  /* Notebook lines background */
+  .page::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image:
+      repeating-linear-gradient(
+        transparent 0,
+        transparent 28px,
+        rgba(255,107,107,0.08) 28px,
+        rgba(255,107,107,0.08) 29px
+      );
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Tape on top */
+  .page::after {
+    content: "";
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    transform: translateX(-50%) rotate(-2deg);
+    width: 120px;
+    height: 28px;
+    background: linear-gradient(135deg, rgba(255,255,255,0.9), rgba(255,230,109,0.8));
+    border: 2px dashed #ff6b6b;
+    border-radius: 4px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    z-index: 10;
+  }
+
+  header {
+    position: relative;
+    z-index: 1;
+    padding: 24px 20px 16px;
+    text-align: center;
+    border-bottom: 3px dashed #ff6b6b;
+    background: linear-gradient(180deg, rgba(255,255,255,0.8), transparent);
+  }
+
+  h1 {
+    margin: 0;
+    font-size: clamp(2rem, 6vw, 3rem);
+    font-weight: 700;
+    background: linear-gradient(135deg, #ff6b6b, #4ecdc4, #ffe66d, #a8e6cf, #ff8b94);
+    background-size: 300% 300%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: gradientShift 4s ease infinite, wiggle 3s ease-in-out infinite;
+    text-shadow: 3px 3px 0 rgba(0,0,0,0.1);
+    letter-spacing: -1px;
+  }
+
+  .subtitle {
+    margin: 8px 0 0;
+    font-size: 1.1rem;
+    color: #666;
+    font-style: italic;
+    animation: blink 2s ease-in-out infinite;
+  }
+
+  .badge {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 4px 12px;
+    font-size: 0.75rem;
+    font-weight: bold;
+    color: #fff;
+    background: linear-gradient(135deg, #ff6b6b, #ff8b94);
+    border-radius: 20px;
+    border: 2px solid #fff;
+    box-shadow: 0 2px 8px rgba(255,107,107,0.4);
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  #status {
+    position: relative;
+    z-index: 1;
+    padding: 12px 20px;
+    font-size: 0.9rem;
+    text-align: center;
+    color: #ff6b6b;
+    font-weight: bold;
+    background: rgba(255,230,109,0.5);
+    border-bottom: 2px dashed #ff6b6b;
+    min-height: 1.5em;
+  }
+
+  #log {
+    position: relative;
+    z-index: 1;
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    min-height: 300px;
+    max-height: 60vh;
+  }
+
+  .msg {
+    max-width: 80%;
+    padding: 12px 16px;
+    border-radius: 18px 18px 4px 18px;
+    line-height: 1.5;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    font-size: 1rem;
+    animation: slideIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    position: relative;
+  }
+
+  .msg::before {
+    content: "";
+    position: absolute;
+    bottom: -6px;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+  }
+
+  .me {
+    align-self: flex-end;
+    background: linear-gradient(135deg, #4ecdc4, #45b7b8);
+    color: #1a1a2e;
+    border-radius: 18px 18px 18px 4px;
+    border: 2px solid #2d2d2d;
+  }
+
+  .me::before {
+    right: -6px;
+    background: #4ecdc4;
+    border: 2px solid #2d2d2d;
+    border-left: none;
+    border-top: none;
+  }
+
+  .bot {
+    align-self: flex-start;
+    background: linear-gradient(135deg, #ffe66d, #ffd93d);
+    color: #1a1a2e;
+    border: 2px solid #2d2d2d;
+    border-radius: 18px 18px 4px 18px;
+  }
+
+  .bot::before {
+    left: -6px;
+    background: #ffe66d;
+    border: 2px solid #2d2d2d;
+    border-right: none;
+    border-top: none;
+  }
+
+  .msg.error {
+    background: linear-gradient(135deg, #ff6b6b, #ff8b94) !important;
+    color: #fff !important;
+    animation: wiggle 0.3s ease-in-out 3;
+  }
+
+  .temp-wrap {
+    position: relative;
+    z-index: 1;
+    padding: 16px 20px;
+    background: rgba(255,255,255,0.7);
+    border-top: 2px dashed #4ecdc4;
+  }
+
+  .temp {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    font-size: 0.95rem;
+    font-weight: bold;
+    color: #2d2d2d;
+  }
+
+  .temp label { cursor: pointer; }
+
+  .temp input[type=range] {
+    flex: 1;
+    max-width: 200px;
+    accent-color: #ff6b6b;
+    height: 8px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
+  #tval {
+    min-width: 40px;
+    text-align: center;
+    background: linear-gradient(135deg, #ff6b6b, #ff8b94);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-weight: 900;
+    font-size: 1.2rem;
+  }
+
+  form {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    gap: 10px;
+    padding: 16px 20px 24px;
+    background: linear-gradient(180deg, transparent, rgba(255,255,255,0.9));
+  }
+
+  input[type=text] {
+    flex: 1;
+    padding: 14px 18px;
+    font: inherit;
+    font-size: 1rem;
+    color: #1a1a2e;
+    background: #fff;
+    border: 3px solid #2d2d2d;
+    border-radius: 16px;
+    box-shadow:
+      0 4px 0 #2d2d2d,
+      0 8px 16px rgba(0,0,0,0.1),
+      0 0 0 1px rgba(255,255,255,0.5) inset;
+    transition: all 0.15s ease;
+  }
+
+  input[type=text]:focus {
+    outline: none;
+    border-color: #ff6b6b;
+    box-shadow:
+      0 4px 0 #ff6b6b,
+      0 8px 16px rgba(255,107,107,0.3),
+      0 0 0 1px rgba(255,255,255,0.5) inset;
+    transform: translateY(-2px);
+  }
+
+  input[type=text]:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  input[type=text]::placeholder {
+    color: #aaa;
+    font-style: italic;
+  }
+
+  button#go {
+    padding: 14px 28px;
+    font: inherit;
+    font-size: 1rem;
+    font-weight: 700;
+    border: 3px solid #2d2d2d;
+    border-radius: 16px;
+    background: linear-gradient(135deg, #ff6b6b, #ff8b94);
+    color: #fff;
+    cursor: pointer;
+    box-shadow:
+      0 4px 0 #c0392b,
+      0 8px 16px rgba(255,107,107,0.3);
+    transition: all 0.1s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  button#go:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow:
+      0 6px 0 #c0392b,
+      0 12px 20px rgba(255,107,107,0.4);
+  }
+
+  button#go:active:not(:disabled) {
+    transform: translateY(2px);
+    box-shadow: 0 2px 0 #c0392b;
+  }
+
+  button#go:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: 0 4px 0 #aaa;
+  }
+
+  :focus-visible {
+    outline: 3px solid #ff6b6b;
+    outline-offset: 3px;
+  }
+
+  /* Typing indicator */
+  .typing {
+    display: flex;
+    gap: 4px;
+    padding: 8px 12px !important;
+  }
+  .typing span {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #2d2d2d;
+    opacity: 0.5;
+    animation: bounce 1.4s ease-in-out infinite both;
+  }
+  .typing span:nth-child(2) { animation-delay: 0.2s; }
+  .typing span:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes bounce {
+    0%, 80%, 100% { transform: scale(0.8); opacity: 0.5; }
+    40% { transform: scale(1.2); opacity: 1; }
+  }
+
+  /* Easter egg: konami code */
+  .konami-active * {
+    animation: rainbow 2s linear infinite !important;
+  }
+  .konami-active body::before {
+    animation: gradientShift 2s ease infinite, rainbow 3s linear infinite !important;
+  }
+
+  /* Scrollbar */
+  #log::-webkit-scrollbar { width: 8px; }
+  #log::-webkit-scrollbar-track { background: transparent; }
+  #log::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, #ff6b6b, #4ecdc4);
+    border-radius: 4px;
+    border: 2px solid transparent;
+    background-clip: content-box;
+  }
+
+  @media (max-width: 500px) {
+    body { padding: 10px; }
+    .page { border-radius: 12px 12px 30px 12px; }
+    .msg { max-width: 90%; }
+    form { flex-direction: column; }
+    button#go { width: 100%; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+<header>
+  <h1>Anton-Gpt</h1>
+  <p class="subtitle">он тупой как болт ебанный 🤷‍♂️</p>
+  <span class="badge">v1.0 "работает на моём компе"</span>
+</header>
+
+<div id="status">Загружаю модель, первый раз это около 100–150 МБ…</div>
+<div id="log" aria-live="polite"></div>
+
+<div class="temp-wrap">
+  <label class="temp">
+    <span>🌡 бредовость:</span>
+    <span id="tval">1.8</span>
+    <input id="temp" type="range" min="0.5" max="2.5" step="0.1" value="1.8" aria-label="Температура">
+  </label>
+</div>
+
+<form id="form">
+  <input type="text" id="q" placeholder="Напиши что-нибудь..." autocomplete="off" disabled>
+  <button id="go" disabled>Отправить</button>
+</form>
+</div>
+
+<script type="module">
+const log = document.getElementById("log");
+const status = document.getElementById("status");
+const q = document.getElementById("q");
+const go = document.getElementById("go");
+const temp = document.getElementById("temp");
+const tval = document.getElementById("tval");
+
+temp.oninput = () => (tval.textContent = temp.value);
+
+function add(text, who, isError = false) {
+  const d = document.createElement("div");
+  d.className = "msg " + who + (isError ? " error" : "");
+  d.textContent = text;
+  log.appendChild(d);
+  log.scrollTop = log.scrollHeight;
+  return d;
+}
+
+function addTyping() {
+  const d = document.createElement("div");
+  d.className = "msg bot typing";
+  d.innerHTML = "<span></span><span></span><span></span>";
+  log.appendChild(d);
+  log.scrollTop = log.scrollHeight;
+  return d;
+}
+
+function lock(on) {
+  q.disabled = go.disabled = on;
+  if (!on) q.focus();
+}
+
+let worker = new Worker("worker.js", { type: "module" });
+let botBubble = null;
+
+worker.onmessage = (e) => {
+  const { type, ...payload } = e.data;
+  if (type === "progress") {
+    status.textContent = `Загружаю модель (${payload.device}): ${payload.percent}%`;
+  } else if (type === "ready") {
+    status.textContent = `Готово (${payload.backend}), можно писать. 🚀`;
+    lock(false);
+  } else if (type === "token") {
+    if (!botBubble) {
+      botBubble = add("", "bot");
+    }
+    botBubble.textContent += payload.text;
+    log.scrollTop = log.scrollHeight;
+  } else if (type === "done") {
+    botBubble = null;
+    lock(false);
+  } else if (type === "error") {
+    if (botBubble) {
+      botBubble.remove();
+      botBubble = null;
+    }
+    add("Ошибка: " + payload.message, "bot", true);
+    lock(false);
+  }
+};
+
+const useGpu = new URLSearchParams(location.search).has("gpu");
+worker.postMessage({ type: "init", payload: { useGpu } });
+
+document.getElementById("form").onsubmit = async (ev) => {
+  ev.preventDefault();
+  const text = q.value.trim();
+  if (!text) return;
+  q.value = "";
+  add(text, "me");
+  lock(true);
+  worker.postMessage({ type: "generate", payload: { text, temperature: parseFloat(temp.value) } });
+};
+
+/* Konami code easter egg */
+let konami = [];
+const konamiCode = ["ArrowUp","ArrowUp","ArrowDown","ArrowDown","ArrowLeft","ArrowRight","ArrowLeft","ArrowRight","b","a"];
+document.addEventListener("keydown", (e) => {
+  konami.push(e.key);
+  if (konami.length > konamiCode.length) konami.shift();
+  if (konami.join(",") === konamiCode.join(",")) {
+    document.body.classList.toggle("konami-active");
+    add("🎉 КОНАМИ КОД АКТИВИРОВАН! РАДУГА ВКЛЮЧЕНА 🌈", "bot");
+  }
+});
+
+/* Random funny status messages */
+const funnyStatuses = [
+  "думает... 🤔",
+  "пересчитывает нейроны... 🧠",
+  "спрашивает у кота... 🐱",
+  "гуглит в голове... 🔍",
+  "считает на пальцах... 🤏",
+  "ждун... ⏳",
+];
+let statusInterval;
+function startFunnyStatus() {
+  statusInterval = setInterval(() => {
+    if (!q.disabled) {
+      status.textContent = funnyStatuses[Math.floor(Math.random() * funnyStatuses.length)];
+    }
+  }, 3000);
+}
+function stopFunnyStatus() { clearInterval(statusInterval); }
+
+/* Start funny status when ready */
+const origOnMessage = worker.onmessage;
+worker.onmessage = (e) => {
+  origOnMessage(e);
+  if (e.data.type === "ready") {
+    startFunnyStatus();
+  }
+};
+</script>
+</body>
+</html>
