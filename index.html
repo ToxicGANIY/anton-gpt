@@ -283,6 +283,17 @@
     animation: wiggle 0.3s ease-in-out 3;
   }
 
+  .msg.serious {
+    background: linear-gradient(135deg, #4ecdc4, #45b7b8) !important;
+    color: #1a1a2e !important;
+    border: 3px solid #2d2d2d;
+    box-shadow: 0 6px 20px rgba(78,205,196,0.4);
+  }
+  .msg.serious::before {
+    background: #4ecdc4 !important;
+    border-color: #2d2d2d !important;
+  }
+
   .temp-wrap {
     position: relative;
     z-index: 1;
@@ -439,6 +450,25 @@
     animation: gradientShift 2s ease infinite, rainbow 3s linear infinite !important;
   }
 
+  /* Counter styles */
+  .counter {
+    margin-top: 10px;
+    text-align: center;
+    font-size: 0.8rem;
+    font-weight: bold;
+    color: #666;
+    transition: all 0.3s ease;
+  }
+  .counter.serious {
+    color: #fff;
+    background: linear-gradient(135deg, #4ecdc4, #45b7b8);
+    padding: 6px 14px;
+    border-radius: 20px;
+    border: 2px solid #2d2d2d;
+    box-shadow: 0 4px 12px rgba(78,205,196,0.4);
+    animation: pulse 0.8s ease-in-out infinite;
+  }
+
   /* Scrollbar */
   #log::-webkit-scrollbar { width: 8px; }
   #log::-webkit-scrollbar-track { background: transparent; }
@@ -449,8 +479,67 @@
     background-clip: content-box;
   }
 
+  .changelog {
+    position: fixed;
+    z-index: 20;
+    top: 14px;
+    left: 14px;
+    width: 210px;
+    padding: 12px;
+    color: #1a1a2e;
+    background: #fffdf5;
+    border: 3px solid #2d2d2d;
+    border-radius: 14px 14px 14px 4px;
+    box-shadow: 5px 5px 0 rgba(45,45,45,0.7);
+    transform: rotate(-1deg);
+  }
+  .changelog h2 { margin: 0 0 7px; font-size: 0.95rem; }
+  .changelog ul { margin: 0; padding-left: 17px; font-size: 0.72rem; line-height: 1.35; }
+  .ad-banner { display: block; width: 100%; height: 58px; margin-bottom: 8px; object-fit: cover; border: 2px solid #2d2d2d; border-radius: 10px; }
+
+  .ad-card {
+    position: fixed;
+    z-index: 20;
+    bottom: 14px;
+    width: 210px;
+    padding: 12px;
+    color: #1a1a2e;
+    border: 3px solid #2d2d2d;
+    border-radius: 16px;
+    box-shadow: 5px 5px 0 rgba(45,45,45,0.75);
+    transform: rotate(-2deg);
+  }
+  .ad-card.left { left: 14px; background: linear-gradient(145deg, #fff8a8, #ffb347); }
+  .ad-card.right { right: 14px; background: linear-gradient(145deg, #b9f3ff, #bca7ff); transform: rotate(2deg); }
+  .ad-tag { display: block; margin-bottom: 5px; font-size: 0.62rem; font-weight: 900; letter-spacing: 0.06em; }
+  .ad-card h2 { margin: 0 0 5px; font-size: 1rem; line-height: 1.15; }
+  .ad-card p { margin: 0 0 9px; font-size: 0.76rem; line-height: 1.25; }
+  .ad-card button {
+    width: 100%; padding: 7px 8px; font: inherit; font-size: 0.78rem; font-weight: 900;
+    color: #fff; background: #2d2d2d; border: 2px solid #2d2d2d; border-radius: 10px; cursor: pointer;
+  }
+  .ad-card button:hover { transform: translateY(-1px); filter: brightness(1.2); }
+  #ad-toast {
+    position: fixed; z-index: 30; left: 50%; bottom: 18px; transform: translateX(-50%);
+    max-width: calc(100vw - 32px); padding: 10px 16px; color: #fff; background: #2d2d2d;
+    border: 2px solid #fff; border-radius: 14px; box-shadow: 0 5px 18px #0004; text-align: center;
+  }
+  #ad-toast[hidden] { display: none; }
+
+  @media (max-width: 760px) {
+    body { padding-bottom: 138px; }
+    .changelog { position: static; width: 100%; max-width: 520px; margin: 0 auto 10px; transform: none; }
+    .ad-card { bottom: 8px; width: calc(50vw - 18px); padding: 8px; border-width: 2px; }
+    .ad-card.left { left: 8px; }
+    .ad-card.right { right: 8px; }
+    .ad-tag { font-size: 0.52rem; }
+    .ad-card h2 { font-size: 0.82rem; }
+    .ad-card p { margin-bottom: 6px; font-size: 0.66rem; }
+    .ad-card button { padding: 6px 4px; font-size: 0.68rem; }
+  }
+
   @media (max-width: 500px) {
-    body { padding: 10px; }
+    body { padding: 10px 10px 138px; }
     .page { border-radius: 12px 12px 30px 12px; }
     .msg { max-width: 90%; }
     form { flex-direction: column; }
@@ -459,11 +548,19 @@
 </style>
 </head>
 <body>
+<aside class="changelog" aria-label="История изменений">
+  <h2>📝 Changelog · 1.1</h2>
+  <ul>
+    <li>Добавление новой модели к DaunGpt</li>
+    <li>Добавлена Реклама</li>
+    <li>Добавлен Режим OVERDRIVE</li>
+  </ul>
+</aside>
 <div class="page">
 <header>
   <h1>Anton-Gpt</h1>
   <p class="subtitle">он тупой как болт ебанный 🤷‍♂️</p>
-  <span class="badge">v1.0 "работает на моём компе"</span>
+  <span class="badge">v1.1 "Перегрузка мозгов!"</span>
 </header>
 
 <div id="status">Загружаю модель, первый раз это около 100–150 МБ…</div>
@@ -475,6 +572,7 @@
     <span id="tval">1.8</span>
     <input id="temp" type="range" min="0.5" max="2.5" step="0.1" value="1.8" aria-label="Температура">
   </label>
+  <div id="counter" class="counter serious">РЕЖИМ OVERDRIVE!</div>
 </div>
 
 <form id="form">
@@ -483,6 +581,23 @@
 </form>
 </div>
 
+<aside class="ad-card left" aria-label="Шуточная реклама Привет, Сосед">
+  <img class="ad-banner" src="banner-neighbor.png" alt="Мультяшный дом с привидением и надписью «Привет, Сосед! Скидка 60%»">
+  <span class="ad-tag">РЕКЛАМА</span>
+  <h2>🏚 Hello, Neighbor!</h2>
+  <p>Скидка 60%*.</p>
+  <button type="button" data-ad-message="https://store.steampowered.com/app/521890/Hello_Neighbor/">Забрать скидку</button>
+</aside>
+
+<aside class="ad-card right" aria-label="Шуточная реклама Даун VPN">
+  <img class="ad-banner" src="banner-vpn.png" alt="Мультяшный щит с замком и надписью «Даун VPN»">
+  <span class="ad-tag">РЕКЛАМА</span>
+  <h2>🛡 Даун VPN</h2>
+  <p>Прячет твой IP… возможно.</p>
+  <button type="button" data-ad-message="Даун VPN подключён к серверу. Ничего не изменилось я тебя обманул долбаёб">Включить защиту</button>
+</aside>
+<div id="ad-toast" role="status" aria-live="polite" hidden></div>
+
 <script type="module">
 const log = document.getElementById("log");
 const status = document.getElementById("status");
@@ -490,12 +605,24 @@ const q = document.getElementById("q");
 const go = document.getElementById("go");
 const temp = document.getElementById("temp");
 const tval = document.getElementById("tval");
+const counter = document.getElementById("counter");
 
 temp.oninput = () => (tval.textContent = temp.value);
 
-function add(text, who, isError = false) {
+const adToast = document.getElementById("ad-toast");
+let adToastTimer;
+document.querySelectorAll("[data-ad-message]").forEach((button) => {
+  button.addEventListener("click", () => {
+    adToast.textContent = button.dataset.adMessage;
+    adToast.hidden = false;
+    clearTimeout(adToastTimer);
+    adToastTimer = setTimeout(() => { adToast.hidden = true; }, 3500);
+  });
+});
+
+function add(text, who, isError = false, isSerious = false) {
   const d = document.createElement("div");
-  d.className = "msg " + who + (isError ? " error" : "");
+  d.className = "msg " + who + (isError ? " error" : "") + (isSerious ? " serious" : "");
   d.textContent = text;
   log.appendChild(d);
   log.scrollTop = log.scrollHeight;
@@ -516,6 +643,12 @@ function lock(on) {
   if (!on) q.focus();
 }
 
+function updateCounter(count, serious) {
+  if (!counter) return;
+  counter.textContent = serious ? "🎯 OVERDRIVE!" : "🤡 ANTON MODE";
+  counter.className = serious ? "counter serious" : "counter";
+}
+
 let worker = new Worker("worker.js", { type: "module" });
 let botBubble = null;
 
@@ -526,6 +659,8 @@ worker.onmessage = (e) => {
   } else if (type === "ready") {
     status.textContent = `Готово (${payload.backend}), можно писать. 🚀`;
     lock(false);
+  } else if (type === "mode") {
+    updateCounter(payload.count, payload.serious);
   } else if (type === "token") {
     if (!botBubble) {
       botBubble = add("", "bot");
